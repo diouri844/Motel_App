@@ -42,8 +42,29 @@ export class HotelService extends HotelAbstract {
         }
     };
 
-    async getAllHotels(filters?: object): Promise<Hotel[]> { return [] as Hotel[]; }
-    async updateHotel(hotelId: string, updates: object): Promise<Hotel | null> { return null; }
+    async getAllHotels(
+        paginate: object,
+        filters?: object
+    ): Promise<Hotel[]> {
+        try {
+            const hotelList: Hotel[] = await this.prismaClient.hotel.findMany({
+                where: filters,
+                include: {
+                    rooms: true,
+                },
+                ...paginate,
+            });
+            return hotelList;
+        }
+        catch (error) {
+            this.logger.error("Error fetching all hotels:", error);
+            return [];
+        }
+    }
+    async updateHotel(
+        hotelId: string,
+        updates: object
+    ): Promise<Hotel | null> { return null; }
 
     async deleteHotel(hotelId: string): Promise<boolean> { return false; }
 }
