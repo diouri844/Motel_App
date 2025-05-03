@@ -9,8 +9,8 @@ import { ApiResponse } from "../../types/apiResponse.type";
 
 export abstract class HotelControllerAbstract {
 
-    private readonly serviceProvider: HotelService = new HotelService();
-    private readonly logger: winstonLogger = logger;
+    protected readonly serviceProvider: HotelService = new HotelService();
+    protected readonly logger: winstonLogger = logger;
     /**
      * Handle hotel creation request
      * @param req Express request (expects `name` & `location` in body)
@@ -38,7 +38,7 @@ export abstract class HotelControllerAbstract {
      */
     abstract getAllHotels(
         req: Request,
-        res: Response): Promise<ApiResponse<Hotel[]>>;
+        res: Response): Promise<ApiResponse>;
 
     /**
      * Handle updating a hotel's details
