@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { RoomControllerAbstract } from "../abstract/controllers/roomController.abstract";
-import { Hotel, Room } from "../generated/prisma/client";
+import { Room } from "../generated/prisma/client";
 import { ApiResponse, ResponseStatus } from "../types/apiResponse.type";
 import { CreateRoomDto } from "../types/dto/createRoom.dto";
 import { RoomPref } from "../types/roomPref.type";
