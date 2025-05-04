@@ -3,7 +3,7 @@ import { Hotel } from "../generated/prisma/client";
 import { ApiResponse, ResponseStatus } from "../types/apiResponse.type";
 import { Request, Response } from "express";
 import { Pagination } from "../types/paginate.type";
-import { UpdateHotelDto } from "../types/updateHotel.dto";
+import { UpdateHotelDto } from "../types/dto/updateHotel.dto";
 
 
 
