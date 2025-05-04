@@ -32,10 +32,16 @@ export abstract class RoomControllerAbstract {
     ): Promise<ApiResponse>;
 
 
+    abstract getRoomList(
+        req: Request,
+        res: Response
+    ): Promise<ApiResponse<Room[]>>;
+
+
     abstract findHotelRoomList(
         req: Request,
         res: Response
-    ): Promise<ApiResponse<Hotel[]>>
+    ): Promise<ApiResponse<Room[]>>
 
 
     abstract roomAvailabilityCheck(
