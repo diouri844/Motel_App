@@ -7,16 +7,20 @@ import { HotelRoute } from './routes/hotel.route';
 import { HotelController } from './controllers/hotel.controller';
 import { RoomRoute } from './routes/room.route';
 import { RoomController } from './controllers/room.controller';
+import { GuestRoute } from './routes/guest.route';
+import { GuestController } from './controllers/guest.controller';
 const app = express();
 export const prefixer = "/api/v1";
 function initRoutes(app: express.Application): void {
     // Initialize controllers and routes
     const hotelRoute = new HotelRoute(new HotelController);
     const roomRoute = new RoomRoute(new RoomController);
+    const guestRoute = new GuestRoute(new GuestController);
 
     // Use the routes
     app.use("/", hotelRoute.getRouter());
     app.use("/", roomRoute.getRouter());
+    app.use("/", guestRoute.getRouter());
 }
 
 // setup express app :
