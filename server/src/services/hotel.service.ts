@@ -48,6 +48,7 @@ export class HotelService extends HotelAbstract {
         paginate: Pagination
     ): Promise<Hotel[]> {
         try {
+
             const skip = (paginate.page - 1) * paginate.perPage;
             const take = paginate.perPage;
             const hotelList: Hotel[] = await this.prismaClient.hotel.findMany({
