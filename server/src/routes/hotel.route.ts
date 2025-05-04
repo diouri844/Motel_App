@@ -1,17 +1,13 @@
 import { Router } from "express";
-import { HotelControllerAbstract } from "../abstract/controllers/hotelController.abstract";
 import { HotelRouteAbstract } from "../abstract/routes/hotelRoute.abstract";
-import { prefixer } from "../main";
 import { HotelController } from "../controllers/hotel.controller";
+import { HotelControllerAbstract } from "../abstract/controllers/hotelController.abstract";
 
 export class HotelRoute extends HotelRouteAbstract {
-    protected hotelController: HotelController;
-    path = prefixer + "/hotels";
+    constructor(hotelController: HotelController) {
+        super(hotelController);
+    };
 
-    constructor(hotelController: HotelControllerAbstract) {
-        super();
-        this.hotelController = hotelController;
-    }
 
     protected initializeRoutes(): void {
         this.logger.info("Initializing hotel routes");
