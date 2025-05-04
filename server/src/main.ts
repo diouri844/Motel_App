@@ -5,15 +5,18 @@ import cors from 'cors';
 import morganMiddleware from './config/morganMiddleware';
 import { HotelRoute } from './routes/hotel.route';
 import { HotelController } from './controllers/hotel.controller';
+import { RoomRoute } from './routes/room.route';
+import { RoomController } from './controllers/room.controller';
 const app = express();
 export const prefixer = "/api/v1";
 function initRoutes(app: express.Application): void {
     // Initialize controllers and routes
-    const hotelController = new HotelController();
-    const hotelRoute = new HotelRoute(hotelController);
+    const hotelRoute = new HotelRoute(new HotelController);
+    const roomRoute = new RoomRoute(new RoomController);
 
     // Use the routes
     app.use("/", hotelRoute.getRouter());
+    app.use("/", roomRoute.getRouter());
 }
 
 // setup express app :
