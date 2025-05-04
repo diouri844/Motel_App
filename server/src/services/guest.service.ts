@@ -1,65 +1,86 @@
 import { GuestServiceAbstract } from "../abstract/services/guest.abstract";
-import { Guest, PrismaClient } from "../generated/prisma/client";
+import { Guest } from "../generated/prisma/client";
 import { CreateGuestDto } from "../types/dto/createGuest.dto";
 import { UpdateGuestDto } from "../types/dto/updateGuest.dto";
 import { Pagination } from "../types/paginate.type";
 
+
+
 export class GuestService extends GuestServiceAbstract {
 
-    async createGuest(guestPayload: CreateGuestDto): Promise<Guest | null> {
+    async createGuest(guestData: CreateGuestDto): Promise<Guest | null> {
         try {
-            return await this.prismaClient.guest.create({ data: guestPayload });
+            return await this.prismaClient.guest.create({ data: guestData });
         } catch (error) {
-            console.error("Error creating new guest:", error);
+            this.logger.error("Error creating guest:", error);
             return null;
         }
     }
 
     async findGuestById(guestId: string): Promise<Guest | null> {
         try {
-            return await this.prismaClient.guest.findUnique({ where: { id: guestId } });
+            return await this.prismaClient.guest.findUnique(
+                {
+                    where: { id: guestId },
+                    include: { Reservation: true }
+
+                });
         } catch (error) {
-            console.error("Error finding guest by ID:", error);
+            this.logger.error("Error finding guest by ID:", error);
             return null;
         }
     }
-
     async findGuestByEmail(guestEmail: string): Promise<Guest | null> {
         try {
-            return await this.prismaClient.guest.findUnique({ where: { email: guestEmail } });
+            return await this.prismaClient.guest.findUnique(
+                {
+                    where: { email: guestEmail },
+                    include: { Reservation: true }
+                });
         } catch (error) {
-            console.error("Error finding guest by ID:", error);
+            this.logger.error("Error finding guest by ID:", error);
             return null;
         }
-    }
-
-
+    };
     async findGuestByPhone(guestPhone: string): Promise<Guest | null> {
         try {
-            return await this.prismaClient.guest.findFirst({ where: { phone: guestPhone } });
+            return await this.prismaClient.guest.findFirst(
+                {
+                    where: { phone: guestPhone },
+                    include: { Reservation: true }
+                });
         } catch (error) {
-            console.error("Error finding guest by ID:", error);
+            this.logger.error("Error finding guest by ID:", error);
             return null;
         }
-    }
+    };
 
 
-    async getAllGuests(pagination: Pagination): Promise<Guest[]> {
+
+    async getAllGuests(paginate: Pagination): Promise<Guest[]> {
         try {
-            const { page, perPage } = pagination;
-            const skip = (page - 1) * perPage;
-            return await this.prismaClient.guest.findMany({ skip, take: perPage });
+            const skip = (paginate.page - 1) * paginate.perPage;
+            return await this.prismaClient.guest.findMany(
+                {
+                    where: {},
+                    include: {
+                        Reservation: true
+                    },
+                    skip,
+                    take: paginate.perPage
+                }
+            );
         } catch (error) {
-            console.error("Error fetching all guests:", error);
+            this.logger.error("Error fetching all guests:", error);
             return [];
         }
     }
 
-    async updateGuest(guestId: string, guestPayload: UpdateGuestDto): Promise<Guest | null> {
+    async updateGuest(guestId: string, updateData: UpdateGuestDto): Promise<Guest | null> {
         try {
-            return await this.prismaClient.guest.update({ where: { id: guestId }, data: guestPayload });
+            return await this.prismaClient.guest.update({ where: { id: guestId }, data: updateData });
         } catch (error) {
-            console.error("Error updating guest:", error);
+            this.logger.error("Error updating guest:", error);
             return null;
         }
     }
@@ -69,7 +90,7 @@ export class GuestService extends GuestServiceAbstract {
             await this.prismaClient.guest.delete({ where: { id: guestId } });
             return true;
         } catch (error) {
-            console.error("Error deleting guest:", error);
+            this.logger.error("Error deleting guest:", error);
             return false;
         }
     }
