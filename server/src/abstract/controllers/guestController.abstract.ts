@@ -13,5 +13,5 @@ export abstract class GuestControllerAbstract {
     abstract findGuestById(req: Request, res: Response): Promise<ApiResponse<Guest>>;
     abstract getAllGuests(req: Request, res: Response): Promise<ApiResponse<Guest[]>>;
     abstract updateGuest(req: Request, res: Response): Promise<ApiResponse<Guest>>;
-    abstract deleteGuest(req: Request, res: Response): Promise<ApiResponse<Guest>>;
+    abstract deleteGuest(req: Request, res: Response): Promise<ApiResponse>;
 }
