@@ -2,12 +2,18 @@ import { Router } from "express";
 import { RoomControllerAbstract } from "../controllers/roomController.abstract";
 import logger from "../../config/logger";
 import { Logger as winstonLogger } from "winston";
+import { prefixer } from "../../main";
 
 export abstract class RoomRouteAbstract {
     protected router = Router();
     protected roomController: RoomControllerAbstract;
     protected logger: winstonLogger = logger;
-    protected path = "/rooms"
+    protected path = prefixer + "/rooms"
+
+    constructor(roomController: RoomControllerAbstract) {
+        this.roomController = roomController;
+        this.initializeRoutes();
+    }
 
 
     /**
@@ -19,7 +25,6 @@ export abstract class RoomRouteAbstract {
      * Expose the router instance
      */
     getRouter(): Router {
-        this.initializeRoutes();
         return this.router;
     }
 }
