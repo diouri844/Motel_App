@@ -1,9 +1,17 @@
-import { Guest } from "@prisma/client";
 import { CreateGuestDto } from "../../types/dto/createGuest.dto";
 import { UpdateGuestDto } from "../../types/dto/updateGuest.dto";
+import { Logger as winstonLogger } from "winston";
+import logger from "../../config/logger";
+import { Guest, PrismaClient } from "../../generated/prisma/client";
+import { prismaClientProvider } from "../../services/prisma.service";
+import { Pagination } from "../../types/paginate.type";
 
 
 export abstract class GuestServiceAbstract {
+    readonly prismaClient: PrismaClient = prismaClientProvider;
+    readonly logger: winstonLogger = logger;
+
+
     /**
      * Create a new guest
      * @param guestData Guest details
@@ -38,7 +46,7 @@ export abstract class GuestServiceAbstract {
      * @param perPage Number of results per page
      * @returns Array of guest objects
      */
-    abstract getAllGuests(page: number, perPage: number): Promise<Guest[]>;
+    abstract getAllGuests(pagination: Pagination): Promise<Guest[]>;
 
     /**
      * Update guest details
