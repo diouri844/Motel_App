@@ -3,10 +3,18 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morganMiddleware from './config/morganMiddleware';
+import { HotelRoute } from './routes/hotel.route';
+import { HotelController } from './controllers/hotel.controller';
 const app = express();
+export const prefixer = "/api/v1";
+function initRoutes(app: express.Application): void {
+    // Initialize controllers and routes
+    const hotelController = new HotelController();
+    const hotelRoute = new HotelRoute(hotelController);
 
-function initRoutes(app: express.Application) { }
-
+    // Use the routes
+    app.use("/", hotelRoute.getRouter());
+}
 
 // setup express app :
 app.use(bodyParser.json());
