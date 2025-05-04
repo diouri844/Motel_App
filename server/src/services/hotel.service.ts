@@ -1,8 +1,8 @@
 import { HotelAbstract } from "../abstract/services/hotel.abstract";
 import { Hotel, PrismaClient } from "../generated/prisma/client";
-import { CreateHotelDto } from "../types/createHotel.dto";
+import { CreateHotelDto } from "../types/dto/createHotel.dto";
 import { Pagination } from "../types/paginate.type";
-import { UpdateHotelDto } from "../types/updateHotel.dto";
+import { UpdateHotelDto } from "../types/dto/updateHotel.dto";
 
 export class HotelService extends HotelAbstract {
 
