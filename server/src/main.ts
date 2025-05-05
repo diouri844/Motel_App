@@ -11,6 +11,8 @@ import { GuestRoute } from './routes/guest.route';
 import { GuestController } from './controllers/guest.controller';
 import { DiscountController } from './controllers/discount.controller';
 import { DiscountRoute } from './routes/discount.route';
+import { ReservationRoute } from './routes/reservation.route';
+import { ReservationController } from './controllers/reservation.controller';
 const app = express();
 export const prefixer = "/api/v1";
 function initRoutes(app: express.Application): void {
@@ -19,12 +21,14 @@ function initRoutes(app: express.Application): void {
     const roomRoute = new RoomRoute(new RoomController);
     const guestRoute = new GuestRoute(new GuestController);
     const discountRoute = new DiscountRoute(new DiscountController);
+    const reservationRoute = new ReservationRoute(new ReservationController());
 
     // Use the routes
     app.use("/", hotelRoute.getRouter());
     app.use("/", roomRoute.getRouter());
     app.use("/", guestRoute.getRouter());
     app.use("/", discountRoute.getRouter());
+    app.use("/", reservationRoute.getRouter());
 }
 
 // setup express app :
