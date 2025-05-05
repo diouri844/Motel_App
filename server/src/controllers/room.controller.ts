@@ -50,7 +50,7 @@ export class RoomController extends RoomControllerAbstract {
             });
 
         } catch (error) {
-            this.logger.error(`Error creating room in Hotel ID ${hotelId}:`, error);
+            this.logger.error(`Error creating room in Hotel ID ${req.params.hotelId}:`, error);
             return res.status(500).json({
                 status: ResponseStatus.INTERNAL_SERVER_ERROR,
                 message: "Internal server error",
