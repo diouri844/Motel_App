@@ -1,9 +1,16 @@
-import { Discount } from "../../generated/prisma/client";
 //import { CreateDiscountDto } from "../types/dto/createDiscount.dto";
 //import { UpdateDiscountDto } from "../types/dto/updateDiscount.dto";
 import { Pagination } from "../../types/paginate.type"
+import { Logger as winstonLogger } from "winston";
+import logger from "../../config/logger";
+import { Discount, PrismaClient } from "../../generated/prisma/client";
+import { prismaClientProvider } from "../../services/prisma.service";
+import { CreateDiscountDto } from "../../types/dto/createDiscount.dto";
+
 
 export abstract class DiscountServiceAbstract {
+    readonly prismaClient: PrismaClient = prismaClientProvider;
+    readonly logger: winstonLogger = logger;
     /**
      * Create a new discount
      * @param discountData Discount details
