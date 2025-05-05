@@ -49,11 +49,11 @@ export class DiscountController extends DiscountControllerAbstract {
         res: Response
     ): Promise<ApiResponse<Discount[]>> {
         try {
-            const { page = 1, limit = 10, perPage = 100 } = req.query;
+            const { page, limit, perPage } = req.query;
             const pagination: Pagination = {
-                page: parseInt(page as string, 10),
-                perPage: parseInt(perPage as string, 100),
-                limit: parseInt(limit as string, 10),
+                page: parseInt(page as string) || 1,
+                perPage: parseInt(perPage as string) || 10,
+                limit: parseInt(limit as string) || 100,
             };
 
             this.logger.info(`Fetching all discounts with pagination: ${JSON.stringify(pagination)}`);
@@ -183,11 +183,11 @@ export class DiscountController extends DiscountControllerAbstract {
     ): Promise<ApiResponse<Discount[]>> {
         try {
             this.logger.info(`Fetching discount `);
-            const { page = 1, limit = 10, perPage = 100 } = req.query;
+            const { page, limit, perPage } = req.query;
             const pagination: Pagination = {
-                page: parseInt(page as string, 10),
-                perPage: parseInt(perPage as string, 100),
-                limit: parseInt(limit as string, 10),
+                page: parseInt(page as string) || 1,
+                perPage: parseInt(perPage as string) || 10,
+                limit: parseInt(limit as string) || 100,
             };
             const discount: Discount[] = await this.serviceProvider.getValidDiscounts(pagination);
 
