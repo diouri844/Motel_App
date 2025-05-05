@@ -3,6 +3,8 @@ import { ReservationServiceAbstract } from "../abstract/services/reservationServ
 import { Pagination } from "../types/paginate.type";
 import logger from "../config/logger";
 import { CreateReservationDto } from "../types/dto/createReservation.dto";
+import { ReservationFilter } from "../types/reservationFilter.type";
+
 
 export class ReservationService extends ReservationServiceAbstract {
 
@@ -35,12 +37,19 @@ export class ReservationService extends ReservationServiceAbstract {
         }
     }
 
-    async getAllReservations(pagination: Pagination): Promise<Reservation[]> {
+    async getAllReservations(
+        pagination: Pagination,
+        filter: ReservationFilter
+
+    ): Promise<Reservation[]> {
         try {
             const skip = (pagination.page - 1) * pagination.perPage;
             const take = pagination.perPage;
 
             return await this.prismaClient.reservation.findMany({
+                where: {
+                    ...filter
+                },
                 skip,
                 take,
                 include: {
