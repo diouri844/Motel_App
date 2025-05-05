@@ -4,6 +4,7 @@ import { Pagination } from "../../types/paginate.type";
 import { prismaClientProvider } from "../../services/prisma.service";
 import { Logger as winstonLogger } from "winston";
 import logger from "../../config/logger";
+import { ReservationFilter } from "../../types/reservationFilter.type";
 
 
 
@@ -18,7 +19,7 @@ export abstract class ReservationServiceAbstract {
 
     abstract getReservationById(reservationId: string): Promise<Reservation | null>;
 
-    abstract getAllReservations(pagination: Pagination): Promise<Reservation[]>;
+    abstract getAllReservations(pagination: Pagination, filter: ReservationFilter): Promise<Reservation[]>;
 
     abstract deleteReservation(reservationId: string): Promise<boolean>;
 }
