@@ -1,6 +1,0 @@
-export const SET_STOCK_DATA = "SET_STOCK_DATA";
-export const GET_STOCK_DATA = "GET_STOCK_DATA";
-export const SET_SEARCH_QUERY = "SET_SEARCH_QUERY";
-export const CLEAR_SEARCH_QUERY = "CLEAR_SEARCH_QUERY";
-export const ADD_STOCK = "ADD_STOCK";
-export const EDIT_STOCK = "EDIT_STOCK";
