@@ -18,10 +18,14 @@ function HeroSection() {
               Discover the perfect balance of luxury, comfort, and natural beauty at Serenity Resort
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-white text-black hover:bg-white/90">
+              <Button 
+              onClick={ ()=>  window.location.href = "#reservation"}
+              
+              size="lg" className="bg-white text-black hover:bg-white/90">
                 Book Your Stay
               </Button>
               <Button size="lg" 
+              onClick={ ()=>  window.location.href = "#rooms"}
               className="hover:opacity-75"
               >
                 Explore Rooms
