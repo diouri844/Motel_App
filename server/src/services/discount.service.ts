@@ -8,7 +8,9 @@ export class DiscountService extends DiscountServiceAbstract {
 
     async createDiscount(discountData: CreateDiscountDto): Promise<Discount | null> {
         try {
-            return await this.prismaClient.discount.create({ data: discountData });
+            return await this.prismaClient.discount.create({
+                data: { ...discountData, validUntil: new Date(discountData.validUntil) }
+            });
         } catch (error) {
             this.logger.error("Error creating discount:", error);
             return null;
@@ -18,20 +20,21 @@ export class DiscountService extends DiscountServiceAbstract {
 
     async isValidDiscount(discountCode: string): Promise<boolean> {
         try {
-            const discount = await this.prismaClient.discount.findUnique({
+            const discount = await this.prismaClient.discount.findFirst({
                 where: {
                     code: discountCode
                 }
             });
             if (!discount) {
-                this.logger.error("Failed to get discount")
+                this.logger.warn(`Discount with code ${discountCode} not found`);
                 return false;
             }
             // Check if the discount is still valid
-            if (discount.validUntil && new Date(discount.validUntil) < new Date()) {
-                return false;
+            if (discount.validUntil && new Date(discount.validUntil) >= new Date()) {
+                return true;
             }
-            return true;
+            this.logger.warn(`Discount with code ${discountCode} has expired`);
+            return false;
         } catch (error) {
             this.logger.error("Error validating discount:", error);
             return false;
@@ -59,20 +62,19 @@ export class DiscountService extends DiscountServiceAbstract {
 
     async getValidDiscounts(paginate: Pagination): Promise<Discount[]> {
         try {
-            const skip = (paginate.page - 1) * paginate.perPage;
             const currentDate = new Date();
+            const { page = 1, limit = 100, perPage = 10 } = paginate;
+            const skip = (page - 1) * perPage;
             return await this.prismaClient.discount.findMany({
                 where: {
-                    validUntil: {
-                        gte: currentDate,
-                    },
+                    validUntil: { gte: currentDate },
                 },
                 skip,
-                take: paginate.perPage,
+                take: perPage,
             });
         } catch (error) {
             this.logger.error("Error fetching valid discounts:", error);
-            return [];
+            return [] as Discount[];
         }
     }
 
