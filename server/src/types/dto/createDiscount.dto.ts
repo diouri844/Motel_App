@@ -1,3 +1,8 @@
-import { Discount } from "../../generated/prisma/client";
 
-export type CreateDiscountDto = Omit<Discount, "id" | "createdAt" | "updatedAt">
+export type CreateDiscountDto = {
+    hotelId: string;
+    roomId: string | null;
+    code: string;
+    percentage: number;
+    validUntil: string;
+}
