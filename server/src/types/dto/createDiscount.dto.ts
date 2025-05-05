@@ -1,3 +1,3 @@
-import { Guest } from "../../generated/prisma/client";
+import { Discount } from "../../generated/prisma/client";
 
-export type CreateDiscountDto = Omit<Guest, "id" | "createdAt" | "updatedAt">
+export type CreateDiscountDto = Omit<Discount, "id" | "createdAt" | "updatedAt">
