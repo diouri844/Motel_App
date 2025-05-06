@@ -32,6 +32,34 @@ class RoomFacade implements BaseFacade {
         }
         );
     }
+
+    // get a single roomm details by id 
+    async getRoomById(roomId: string): Promise<AxiosResponse> {
+        return await this.axiosInstance.get(
+            this.path + "/item/" + roomId
+        );
+    }
+
+
+
+    // check room availibility :
+    async checkRoom(
+        hotelId: string,
+        roomId: string,
+        checkIn: string,
+        checkOut: string
+    ): Promise<AxiosResponse> {
+        return await this.axiosInstance.get(
+            this.path + "/availability/" + hotelId, {
+            params: {
+                roomId,
+                checkIn,
+                checkOut
+            }
+        });
+    }
+
+
 }
 
 
