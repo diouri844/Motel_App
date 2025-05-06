@@ -35,7 +35,7 @@ export class RoomRoute extends RoomRouteAbstract {
             this.roomController.findHotelRoomList.bind(this.roomController)
         );
         this.router.get(
-            this.path + "/availability",
+            this.path + "/availability/:hotelId",
             this.roomController.roomAvailabilityCheck.bind(this.roomController)
         );
     }
