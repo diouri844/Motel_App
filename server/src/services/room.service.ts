@@ -31,6 +31,7 @@ export class RoomService extends RoomAbstract {
         try {
             const targetRoom: Room | null = await this.prismaClient.room.findUnique({
                 where: { id: roomId },
+                include: { Discount: true }
             });
             if (!targetRoom) return null;
             return targetRoom;
