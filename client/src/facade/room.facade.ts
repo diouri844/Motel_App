@@ -1,46 +1,29 @@
 import BaseFacade from "@/facade/base.facade";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { axiosConfig } from "@/axios.setup";
+import { SupabaseClient } from "@supabase/supabase-js";
+import client from "@/context/superBaseclietn.context";
 
 
 
 class RoomFacade implements BaseFacade {
-    path = "/rooms";
-    axiosInstance: AxiosInstance = axios.create({
-        ...axiosConfig
-    });
 
-    constructor() {
-        this.axiosInstance.interceptors.request.use(
-            config => { return config },
-            error => { return Promise.reject(error) }
-        );
-        this.axiosInstance.interceptors.response.use(
-            response => { return response },
-            error => { return Promise.reject(error) }
-        );
-    };
+    client: SupabaseClient = client;
 
     // get all rooms : 
-    async getRoomList(): Promise<AxiosResponse> {
-        return await this.axiosInstance.get(
-            this.path + "/list", {
-            headers: {
-                page: 1,
-                perPage: 100
-            }
-        }
-        );
+    async getRoomList(): Promise<any> {
+        return await this.client.from("rooms").select("*");
     }
 
     // get a single roomm details by id 
-    async getRoomById(roomId: string): Promise<AxiosResponse> {
-        return await this.axiosInstance.get(
-            this.path + "/item/" + roomId
-        );
+    async getRoomById(roomId: string): Promise<any> {
+        return await this.client.from("rooms").select("*").eq("id", roomId).single();
+    };
+
+    // find rooms by type :
+    async findRoomsByType(roomType: string): Promise<any> {
+        return await this.client.from("rooms")
+            .select("*")
+            .eq("type", roomType);
     }
-
-
 
     // check room availibility :
     async checkRoom(
@@ -48,17 +31,15 @@ class RoomFacade implements BaseFacade {
         roomId: string,
         checkIn: string,
         checkOut: string
-    ): Promise<AxiosResponse> {
-        return await this.axiosInstance.get(
-            this.path + "/availability/" + hotelId, {
-            params: {
-                roomId,
-                checkIn,
-                checkOut
-            }
-        });
+    ): Promise<any> {
+        return await this.client.from("rooms")
+            .select("*")
+            .eq("id", roomId)
+            .eq("hotelId", hotelId)
+            .eq("checkIn", checkIn).
+            eq("checkOut", checkOut)
+            .single();
     }
-
 
 }
 
