@@ -34,12 +34,12 @@ function RoomCard({ title, description, price, image, features, featured = false
           <div className="pt-4">
             <h4 className="text-sm font-medium mb-2">Room Features:</h4>
             <ul className="grid grid-cols-2 gap-x-2 gap-y-1">
-              {features.map((feature, index) => (
+              {/* {features.map((feature, index) => (
                 <li key={index} className="text-sm text-muted-foreground flex items-center gap-1">
                   <CheckCircle className="h-3 w-3 text-primary" />
                   {feature}
                 </li>
-              ))}
+              ))} */}
             </ul>
           </div>
           <div className="pt-4">

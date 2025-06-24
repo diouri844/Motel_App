@@ -1,7 +1,60 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RoomCard from "@/components/utils/roomCard.component";
+import RoomFacade from "@/facade/room.facade";
+import { useEffect, useState } from "react";
 
 function RoomsSection() {
+  const facade = new RoomFacade();
+
+
+  // state to save all room types
+  const [roomTypes, setRoomTypes] = useState<string[]>([]);
+  // state to save the selected room type:
+  const [selectedRoomType, setSelectedRoomType] = useState<string>("all");
+  const [availableRooms, setAvailableRooms] = useState<any[]>([]);
+  
+  const handleRoomTypeChange = async (type: string) => {
+    setSelectedRoomType(type);
+    // fetch room types based on the selected type
+    const availableRoomsList = await facade.findRoomsByType(type);
+    setAvailableRooms(availableRoomsList.data);
+    console.log("Available Rooms for type", type, ":", availableRoomsList);
+  }
+
+
+  useEffect(() => {
+    const fetchRoomTypes = async () => {
+      try {
+        const { data, error } = await facade.client
+          .from('rooms')
+          .select('type')
+          .neq('status', 'Booked')
+          .order('type', { ascending: true });
+  
+        if (error || !data) {
+          console.error('Error fetching room types:', error);
+          return null;
+        }
+  
+        return [...new Set(data.map(room => room.type))];
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        return null;
+      }
+    };
+  
+    // Immediately invoke the async function
+    (async () => {
+      const roomTypeList = await fetchRoomTypes();
+      if (roomTypeList) {
+        setRoomTypes(roomTypeList);
+      }
+    })();
+  }, [roomTypes, selectedRoomType]);
+
+
+
+
   return (
     <section id="rooms" className="py-16 md:py-24 bg-muted/50">
               <div className="container">
@@ -12,20 +65,41 @@ function RoomsSection() {
                     comfort and elegance.
                   </p>
                 </div>
-    
                 <Tabs defaultValue="all" className="w-full">
                   <div className="flex justify-center mb-8">
                     <TabsList>
-                      <TabsTrigger value="all">All Rooms</TabsTrigger>
-                      <TabsTrigger value="standard">Standard</TabsTrigger>
-                      <TabsTrigger value="deluxe">Deluxe</TabsTrigger>
-                      <TabsTrigger value="suite">Suites</TabsTrigger>
+                      {
+                        roomTypes.map(
+                          type => (<TabsTrigger 
+                            key={type} 
+                            value={type}
+                            onClick={() => handleRoomTypeChange(type)}
+                            >{type.toLocaleLowerCase()}
+                            </TabsTrigger>)
+                        )
+                      }
                     </TabsList>
                   </div>
-    
-                  <TabsContent value="all" className="mt-0">
+                  <TabsContent value={selectedRoomType} className="mt-0">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <RoomCard
+                      {
+                        
+                          availableRooms.map(room => (
+                            <RoomCard
+                              key={room.id}
+                              title={room.title}
+                              description={room.description}
+                              price={room.price}
+                              image={room.image}
+                              features={room.features}
+                            />
+                          ))
+                        
+                      }
+                      
+                      
+                
+                      {/* <RoomCard
                         title="Standard Room"
                         description="Comfortable room with all essential amenities for a pleasant stay."
                         price={199}
@@ -67,7 +141,7 @@ function RoomsSection() {
                         price={899}
                         image="https://plus.unsplash.com/premium_photo-1661884238187-1c274b3c3413?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D "
                         features={["King Bed", "Private Terrace", "Butler Service", "Private Dining"]}
-                      />
+                      /> */}
                     </div>
                   </TabsContent>
     
