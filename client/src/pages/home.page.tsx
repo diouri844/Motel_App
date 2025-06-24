@@ -18,7 +18,6 @@ export default function HomePage() {
     HeroSection,
     AboutSection,
     RoomsSection,
-    RoomsSection,
     ReservationSection,
     AmenitiesSection,
     TestimonialsSection,
