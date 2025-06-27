@@ -25,6 +25,28 @@ class RoomFacade implements BaseFacade {
             .eq("type", roomType);
     }
 
+
+    // get room featres by room id :
+    async getRoomFeaturesById(roomId: string): Promise<any> {
+        const roomfeaturesId = await this.client.from("room_features")
+            .select("*")
+            .eq("room_id", roomId);
+        if (roomfeaturesId.error) return null
+        const idList: string[] = roomfeaturesId.data.map((feature: any) => feature.feature_id);
+        console.log("Room Features IDs:", idList);
+        const resultList: any[] = [];
+        idList.forEach(
+            async (item: string) => {
+                const res = await this.client.from("features")
+                    .select("name")
+                    .eq("id", item);
+                if (res.error) return null;
+                resultList.push(res.data[0].name);
+            });
+        return resultList;
+    };
+
+
     // check room availibility :
     async checkRoom(
         hotelId: string,
