@@ -42,7 +42,16 @@ function RoomsSection() {
         return null;
       }
     };
-  
+
+    // function to fetch all rooms in the start 
+    const fetchAllRooms = async () => {
+      const allRooms = await facade.getRoomList();
+      if (allRooms && allRooms.data) {
+        setAvailableRooms(allRooms.data);
+      } else {
+        console.error("Failed to fetch all rooms:", allRooms.error);
+      }
+    }
     // Immediately invoke the async function
     (async () => {
       const roomTypeList = await fetchRoomTypes();
@@ -50,6 +59,8 @@ function RoomsSection() {
         setRoomTypes(roomTypeList);
       }
     })();
+
+    fetchAllRooms();
   }, [roomTypes, selectedRoomType]);
 
 
@@ -87,11 +98,10 @@ function RoomsSection() {
                           availableRooms.map(room => (
                             <RoomCard
                               key={room.id}
+                              id={room.id}
                               title={room.title}
                               description={room.description}
                               price={room.price}
-                              image={room.image}
-                              features={room.features}
                             />
                           ))
                         
