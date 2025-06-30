@@ -5,10 +5,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import RoomProps from "@/types/room.type";
+// import RoomProps from "@/types/room.type";
 
 interface RoomSelectionFormProps {
-  roomType: RoomProps[];
+  roomType: string[];
   selectedRoom: string;
   setSelectedRoom: (roomId: string) => void;
   checkIn: Date | null;
@@ -43,9 +43,9 @@ export function RoomSelectionForm({
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <option value="">Select Room Type</option>
-          {roomType.map((item) => (
-            <option value={item.roomId} key={item.roomId}>
-              {item.roomType} Room
+          {roomType.map((item,index) => (
+            <option value={item} key={index}>
+              {item} Room
             </option>
           ))}
         </select>

@@ -19,9 +19,7 @@ function RoomCard({ id, title, description, price, featured = false }) {
       ()=>{
           const fetchRoomFeatures = async (roomId:string) => {
           // Simulate an API call to fetch room features
-          console.log("Fetching room features for room ID:", roomId);
             const featuresResponse = await roomFacade.getRoomFeaturesById(roomId);
-            console.log("Room Features Response:", featuresResponse);
             setRoomFeatures(featuresResponse);
             return ; 
           }

@@ -1,21 +1,11 @@
 import { useState, FormEvent } from "react"
-import { ArrowLeftSquareIcon, CalendarIcon } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Button } from "@/components/ui/button";
 import { format } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
-import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils";
-import RoomProps from "@/types/room.type";
 import { CheckRoomParams, useCheckRoomAvailability } from "@/hooks/useCheckRoomAvailability";
-import { Input } from "@/components/ui/input";
-import { useFindRoom } from "@/hooks/useFindRoom";
-import RoomFacade from "@/facade/room.facade";
 import { RoomSelectionForm } from "./RoomSelectionForm.component";
 import { ReservationDetailsForm } from "./ReservationDetailsForm.component";
 
-export default function ReservationForm({roomType}: { roomType:RoomProps[]}) {
+export default function ReservationForm({roomType}: { roomType:string[]}) {
   const [checkIn, setCheckIn] = useState(null)
   const [checkOut, setCheckOut] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState("");
@@ -34,6 +24,7 @@ export default function ReservationForm({roomType}: { roomType:RoomProps[]}) {
     const params: CheckRoomParams = { hotelId, roomId: selectedRoom, checkIn: checkInStr, checkOut: checkOutStr };
   
     try {
+      console.log("Checking availability with params:", params);
       await checkRoomAvailability(params); // Wait for the async call to complete
       setRoomAvailable(isAvailable as boolean); // Update `roomAvailable` after `isAvailable` is updated
     } catch (error) {
