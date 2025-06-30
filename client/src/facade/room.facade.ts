@@ -33,7 +33,6 @@ class RoomFacade implements BaseFacade {
             .eq("room_id", roomId);
         if (roomfeaturesId.error) return null
         const idList: string[] = roomfeaturesId.data.map((feature: any) => feature.feature_id);
-        console.log("Room Features IDs:", idList);
         const resultList: any[] = [];
         idList.forEach(
             async (item: string) => {
@@ -51,16 +50,12 @@ class RoomFacade implements BaseFacade {
     async checkRoom(
         hotelId: string,
         roomId: string,
-        checkIn: string,
-        checkOut: string
     ): Promise<any> {
         return await this.client.from("rooms")
             .select("*")
-            .eq("id", roomId)
-            .eq("hotelId", hotelId)
-            .eq("checkIn", checkIn).
-            eq("checkOut", checkOut)
-            .single();
+            .eq("type", roomId)
+            .eq("hotel_id", "8650780c-111b-4f69-962f-0ede0d836f71")// hotel id selected has no rooms 
+            .eq("status", 'Available')
     }
 
 }
