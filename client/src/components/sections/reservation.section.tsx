@@ -1,23 +1,18 @@
 import { CheckCircle } from "lucide-react"
 import ReservationForm from "@/components/utils/reservationForm.component";
 // import ReservationFacade from "@/facade/reservation.facade";
-import { useAvailableRooms } from "@/hooks/useAvailableRooms";
-import RoomProps from "@/types/room.type";
+import { useAvailableRooms } from "@/hooks/useFetchRoomTypes";
 
 function ReservationSection() {
 
   const { availableRooms } = useAvailableRooms();
+  console.log("Available Rooms:", availableRooms);
   
-  const uniqueRoomTypes = Array.from(new Set(availableRooms.map(room => room.type)));
-  const availableRoomType: RoomProps[] = uniqueRoomTypes.map(type => {
-    const room = availableRooms.find(room => room.type === type)!;
-    return { roomId: room.id, roomType: type };
-  });
   return (
     <section id="reservation" className="py-16 md:py-24 container">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
-              <ReservationForm  roomType={availableRoomType} />
+              <ReservationForm  roomType={availableRooms} />
             </div>
             <div className="order-1 md:order-2">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Book Your Perfect Stay</h2>
