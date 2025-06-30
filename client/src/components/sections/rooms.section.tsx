@@ -18,7 +18,6 @@ function RoomsSection() {
     // fetch room types based on the selected type
     const availableRoomsList = await facade.findRoomsByType(type);
     setAvailableRooms(availableRoomsList.data);
-    console.log("Available Rooms for type", type, ":", availableRoomsList);
   }
 
 
