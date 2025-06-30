@@ -2,11 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftSquareIcon } from "lucide-react";
 import { format } from "date-fns";
-import RoomProps from "@/types/room.type";
 import { useFindRoom } from "@/hooks/useFindRoom";
 
 interface ReservationDetailsFormProps {
-  roomType: RoomProps[];
+  roomType: String[];
   selectedRoom: string;
   checkIn: Date | null;
   checkOut: Date | null;
