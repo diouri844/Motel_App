@@ -19,7 +19,9 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
         setError(null);
 
         try {
-            const response = await new RoomFacade().checkRoom(hotelId, roomId, checkIn, checkOut);
+            const response = await new RoomFacade().checkRoom(hotelId, roomId);
+            console.log("Room availability response:", response);
+            // check reservation status :
             setIsAvailable(response.data.data.available);
             setMessage(response.data.message);
         } catch (err) {
