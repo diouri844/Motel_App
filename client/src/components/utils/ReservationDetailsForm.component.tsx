@@ -2,11 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftSquareIcon } from "lucide-react";
 import { format } from "date-fns";
-import { useFindRoom } from "@/hooks/useFindRoom";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Bed } from "lucide-react"
+import { useState } from "react";
 interface ReservationDetailsFormProps {
   roomType: String[];
   selectedRoom: string;
+  availableRooms: any[];
   checkIn: Date | null;
   checkOut: Date | null;
   calculateDuration: () => number;
@@ -16,8 +18,8 @@ interface ReservationDetailsFormProps {
 }
 
 export function ReservationDetailsForm({
-  roomType,
   selectedRoom,
+  availableRooms,
   checkIn,
   checkOut,
   calculateDuration,
@@ -26,17 +28,13 @@ export function ReservationDetailsForm({
   loading,
 }: ReservationDetailsFormProps) {
 
-const { room } = useFindRoom(selectedRoom);
-function calculateTotalPrice(discountPercentage: number = 0): number {
-    if (room) {
-        const basePrice = calculateDuration() * room.price;
-        const discountedPrice = basePrice * (1 - discountPercentage / 100);
-        return discountedPrice;
-    }
-    return 0;
+  const [initialPrice, setInitialPrice] = useState<number>(0);
+function calculateTotalPrice(discountPercentage: number = 0, ): number {
+     if( discountPercentage !== 0) {
+       return calculateDuration() * initialPrice * (1 - discountPercentage / 100);
+      }
+      return calculateDuration() * initialPrice;
 }
-
-
   return (
     <div className="space-y-6">
       <div className="border-b pb-4">
@@ -50,7 +48,7 @@ function calculateTotalPrice(discountPercentage: number = 0): number {
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>Room Type:</span>
-            <span className="font-medium">{roomType.find((room) => room.roomId === selectedRoom)?.roomType} Room</span>
+            <span className="font-medium">{selectedRoom} Room</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>Check-in:</span>
@@ -66,9 +64,46 @@ function calculateTotalPrice(discountPercentage: number = 0): number {
           </div>
           <div className="flex justify-between text-sm">
             <span>Total Price:</span>
-            <span className="font-medium">{calculateTotalPrice()} MAD</span>
+            <span className="font-medium">{calculateTotalPrice().toFixed(2)} MAD</span>
           </div>
         </div>
+        <Select onValueChange={(value) => {
+              // time to find the price : 
+              const price = availableRooms.find(room => room.id === value)?.price.toFixed(2) || 0;
+              setInitialPrice(price);
+            }}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a room" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableRooms.map((room) => {
+                return (
+                  <SelectItem 
+                  key={room.id} value={room.id} className="cursor-pointer">
+                    <div className="flex items-center gap-3 py-2">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10">
+                        <Bed className="w-4 h-4 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between gap-4">
+                          <div>
+                            <div className="font-medium">
+                              {room.id} - {room.type}
+                            </div>
+                            <div className="text-sm text-muted-foreground">{room.description}</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-semibold text-primary">MAD{room.price.toFixed(2)}</div>
+                            <div className="text-xs text-muted-foreground">per night</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </SelectItem>
+                )
+              })}
+            </SelectContent>
+          </Select>
       </div>
 
       <form onSubmit={handleBookingSubmit} className="space-y-4">
