@@ -48,7 +48,6 @@ class RoomFacade implements BaseFacade {
 
     // check room availibility :
     async checkRoom(
-        hotelId: string,
         roomId: string,
     ): Promise<any> {
         return await this.client.from("rooms")
