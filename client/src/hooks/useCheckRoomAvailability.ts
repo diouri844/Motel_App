@@ -21,7 +21,6 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
 
         try {
             const response = await new RoomFacade().checkRoom(hotelId, roomId);
-            console.log("Room availability response:", response);
             // time to check if response is valid :
             const { error, data, status } = response;
 
@@ -35,7 +34,6 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
             setAvailableRooms(data);
             setMessage(response.data.message);
         } catch (err) {
-            console.error("Error checking room availability:", err);
             setError("Failed to check room availability.");
             setIsAvailable(null);
         } finally {
