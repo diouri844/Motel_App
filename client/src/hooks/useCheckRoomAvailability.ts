@@ -10,6 +10,7 @@ export interface CheckRoomParams {
 
 export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
     const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+    const [availableRooms, setAvailableRooms] = useState<any[]>([]);
     const [message, setMessage] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -21,8 +22,17 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
         try {
             const response = await new RoomFacade().checkRoom(hotelId, roomId);
             console.log("Room availability response:", response);
+            // time to check if response is valid :
+            const { error, data, status } = response;
+
+            if (error || !data || status !== 200) {
+                setError("Failed to check room availability.");
+                setIsAvailable(null);
+                return;
+            }
             // check reservation status :
-            setIsAvailable(response.data.data.available);
+            setIsAvailable(data.length > 0);
+            setAvailableRooms(data);
             setMessage(response.data.message);
         } catch (err) {
             console.error("Error checking room availability:", err);
@@ -45,5 +55,5 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
         initialParams?.checkOut,
     ]);
 
-    return { isAvailable, loading, error, checkRoomAvailability, message };
+    return { isAvailable, loading, error, checkRoomAvailability, message, availableRooms };
 }
