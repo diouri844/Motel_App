@@ -15,7 +15,7 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const checkRoomAvailability = async ({ hotelId, roomId, checkIn, checkOut }: CheckRoomParams) => {
+    const checkRoomAvailability = async ({ roomId, checkIn, checkOut }: CheckRoomParams) => {
         setLoading(true);
         setError(null);
 
