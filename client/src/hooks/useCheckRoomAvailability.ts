@@ -20,7 +20,7 @@ export function useCheckRoomAvailability(initialParams?: CheckRoomParams) {
         setError(null);
 
         try {
-            const response = await new RoomFacade().checkRoom(hotelId, roomId);
+            const response = await new RoomFacade().checkRoom(roomId);
             // time to check if response is valid :
             const { error, data, status } = response;
 
