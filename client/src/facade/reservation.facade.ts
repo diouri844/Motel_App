@@ -1,8 +1,19 @@
 import client from "@/context/superBaseclietn.context";
 import BaseFacade from "@/facade/base.facade";
-import { reservationType } from "@/types/reservation.type";
+// import { reservationType } from "@/types/reservation.type";
 import { SupabaseClient } from "@supabase/supabase-js";
 
+
+
+type reservationType = {
+    room_id: string;
+    guest_id: string;
+    hotel_id: string;
+    check_in: Date;
+    check_out: Date;
+    discount_code: string | null;
+    final_price: number;
+}
 
 class ReservationFacade implements BaseFacade {
     client: SupabaseClient = client;
