@@ -12,9 +12,7 @@ export default function ReservationForm({roomType}: { roomType:string[]}) {
   const [roomAvailable, setRoomAvailable] = useState<boolean>(false);
   const hotelId:string = "9cbe53b8-8ad7-4d0e-ae4e-71a1b75383c1";
   // handle room change select :
-  const handleRoomChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedRoom(event.target.value);
-  };
+  
   const { isAvailable, loading, checkRoomAvailability,  availableRooms } = useCheckRoomAvailability();
   // handle form send :
   const checkAvailability = async (event: React.FormEvent) => {
@@ -24,10 +22,10 @@ export default function ReservationForm({roomType}: { roomType:string[]}) {
     const params: CheckRoomParams = { hotelId, roomId: selectedRoom, checkIn: checkInStr, checkOut: checkOutStr };
   
     try {
-      // console.log("Checking availability with params:", params);
-      await checkRoomAvailability(params); // Wait for the async call to complete
-      console.log(availableRooms);
-      setRoomAvailable(isAvailable as boolean); // Update `roomAvailable` after `isAvailable` is updated
+      await checkRoomAvailability(params); 
+      // Wait for the async call to complete
+      setRoomAvailable(isAvailable as boolean); 
+      // Update `roomAvailable` after `isAvailable` is updated
     } catch (error) {
       console.error("Error checking room availability:", error);
     }
