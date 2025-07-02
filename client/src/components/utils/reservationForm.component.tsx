@@ -6,8 +6,8 @@ import { RoomSelectionForm } from "./RoomSelectionForm.component";
 import { ReservationDetailsForm } from "./ReservationDetailsForm.component";
 
 export default function ReservationForm({roomType}: { roomType:string[]}) {
-  const [checkIn, setCheckIn] = useState(null)
-  const [checkOut, setCheckOut] = useState(null)
+  const [checkIn, setCheckIn] = useState<Date | null>(null)
+  const [checkOut, setCheckOut] = useState<Date | null>(null)
   const [selectedRoom, setSelectedRoom] = useState("");
   const [roomAvailable, setRoomAvailable] = useState<boolean>(false);
   const hotelId:string = "9cbe53b8-8ad7-4d0e-ae4e-71a1b75383c1";
@@ -41,8 +41,8 @@ export default function ReservationForm({roomType}: { roomType:string[]}) {
     event.preventDefault();
     setRoomAvailable(false);
     // clear all state :
-    setCheckIn(null)
-    setCheckOut(null);
+    setCheckIn(null as any)
+    setCheckOut(null as any);
     setSelectedRoom("");
     return;
   }
