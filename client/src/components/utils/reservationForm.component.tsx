@@ -31,9 +31,7 @@ export default function ReservationForm({roomType}: { roomType:string[]}) {
     }
   };
 
-  function handleBookingSubmit(_event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
-  }
+  
 
   // Removed calculateNights function as it is not currently used.
 
@@ -84,7 +82,6 @@ export default function ReservationForm({roomType}: { roomType:string[]}) {
             checkOut={checkOut}
             calculateDuration={calculateDuration}
             goBack={goBack}
-            handleBookingSubmit={handleBookingSubmit}
             loading={loading}
           />
         )}
