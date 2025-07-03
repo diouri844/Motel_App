@@ -3,12 +3,12 @@ import { useState } from "react";
 
 
 
-export function useAddGuest(guestInformation: any) {
+export function useAddGuest() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
 
-    const addGuest = async () => {
+    const addGuest = async (guestInformation: any) => {
         setLoading(true);
         setError(null);
         setSuccess(false);
@@ -20,12 +20,11 @@ export function useAddGuest(guestInformation: any) {
                 setError(response.error.message || "Failed to add guest");
             }
             setSuccess(true);
-            return response.data; // Return the created guest data
+            return response
+            // Return the created guest data
         } catch (err) {
             setError(err instanceof Error ? err.message : "An unexpected error occurred");
-            return null
-        } finally {
-            setLoading(false);
+            return null;
         }
     }
 
