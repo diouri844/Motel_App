@@ -13,7 +13,6 @@ interface ReservationDetailsFormProps {
   checkOut: Date | null;
   calculateDuration: () => number;
   goBack: (event: React.MouseEvent) => void;
-  handleBookingSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   loading: boolean;
 }
 
@@ -24,17 +23,59 @@ export function ReservationDetailsForm({
   checkOut,
   calculateDuration,
   goBack,
-  handleBookingSubmit,
   loading,
 }: ReservationDetailsFormProps) {
+  // declare a state for managin the guest infor :
+  const [guestInformation, setGuestInformation] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
 
   const [initialPrice, setInitialPrice] = useState<number>(0);
-function calculateTotalPrice(discountPercentage: number = 0, ): number {
-     if( discountPercentage !== 0) {
-       return calculateDuration() * initialPrice * (1 - discountPercentage / 100);
-      }
-      return calculateDuration() * initialPrice;
-}
+  function calculateTotalPrice(discountPercentage: number = 0, ): number {
+      if( discountPercentage !== 0) {
+        return calculateDuration() * initialPrice * (1 - discountPercentage / 100);
+        }
+        return calculateDuration() * initialPrice;
+  };
+
+  const handleBookingSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const price = calculateTotalPrice();
+    // Here you would typically handle the booking submission logic
+    // For example, sending the reservation details to your backend API
+    // This is just a placeholder for demonstration purposes
+    console.log("Booking submitted with details:", {
+      selectedRoom,
+      checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
+      checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
+      totalPrice: price,
+      guest: guestInformation,
+    });
+    return ;
+
+    // create new guestt information : 
+
+    // create new reservation :
+    // const reservationPayload = { 
+    //   room_id: selectedRoom, // Replace with actual room ID
+    //   guest_id: "guest-id-placeholder", // Replace with actual guest ID
+    //   hotel_id: "111b-4f69-962f-0ede0d836f71", // Replace with actual hotel ID
+    //   check_in: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
+    //   check_out: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
+    //   discount_code: null, // Replace with actual discount code if applicable
+    //   final_price: price,
+    // }
+
+
+  }
+
+
+
+
+
   return (
     <div className="space-y-6">
       <div className="border-b pb-4">
@@ -67,7 +108,7 @@ function calculateTotalPrice(discountPercentage: number = 0, ): number {
             <span className="font-medium">{calculateTotalPrice().toFixed(2)} MAD</span>
           </div>
         </div>
-        <Select onValueChange={(value) => {
+        <Select onValueChange={ (value) => {
               // time to find the price : 
               const price = availableRooms.find(room => room.id === value)?.price.toFixed(2) || 0;
               setInitialPrice(price);
@@ -114,26 +155,38 @@ function calculateTotalPrice(discountPercentage: number = 0, ): number {
               <label htmlFor="first-name" className="text-sm font-medium">
                 Name
               </label>
-              <Input id="first-name" required type="text" placeholder="Enter your name please" />
+              <Input 
+              value={guestInformation.name}
+              onChange={(e) => setGuestInformation({ ...guestInformation, name: e.target.value })}
+              id="first-name" required type="text" placeholder="Enter your name please" />
             </div>
             <div className="space-y-2">
               <label htmlFor="phone" className="text-sm font-medium">
                 Phone 
               </label>
-              <Input id="phone" required type="tel" placeholder="+212 000000" />
+              <Input 
+              value={guestInformation.phone}
+              onChange={(e) => setGuestInformation({ ...guestInformation, phone: e.target.value })}
+              id="phone" required type="tel" placeholder="+212 000000" />
             </div>
           </div>
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium">
               Email
             </label>
-            <Input id="email" type="email" required  placeholder="Example@Gmail.com"/>
+            <Input 
+            value={guestInformation.email}
+            onChange={(e) => setGuestInformation({ ...guestInformation, email: e.target.value })}
+            id="email" type="email" required  placeholder="Example@Gmail.com"/>
           </div>
           <div className="space-y-2">
             <label htmlFor="address" className="text-sm font-medium">
               Address
             </label>
-            <Input id="address" type="text" required placeholder="Your Address .." />
+            <Input 
+            value={guestInformation.address}
+            onChange={(e) => setGuestInformation({ ...guestInformation, address: e.target.value })}
+            id="address" type="text" required placeholder="Your Address .." />
           </div>
           <div className="space-y-2">
             <label htmlFor="codePromo" className="text-sm font-medium">
