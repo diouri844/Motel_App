@@ -6,7 +6,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 
 
-class GuestFacase implements BaseFacade {
+class GuestFacade implements BaseFacade {
     client: SupabaseClient = client;
     // create new guest details : 
     async createGuest(payload: any): Promise<any> {
@@ -14,4 +14,4 @@ class GuestFacase implements BaseFacade {
     }
 }
 
-export default GuestFacase;
+export default GuestFacade;
