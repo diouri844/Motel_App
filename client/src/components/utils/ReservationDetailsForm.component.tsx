@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftSquareIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Bed } from "lucide-react"
 import { useState } from "react";
+import { useAddGuest } from "@/hooks/useAddGuest";
 interface ReservationDetailsFormProps {
   roomType: String[];
   selectedRoom: string;
@@ -26,13 +27,15 @@ export function ReservationDetailsForm({
   loading,
 }: ReservationDetailsFormProps) {
   // declare a state for managin the guest infor :
+  // import hooks responsible for createing new guest : 
+  const [loadingState, setLoadingState] = useState<boolean>(loading);
   const [guestInformation, setGuestInformation] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
   });
-
+  const { addGuest } = useAddGuest();
   const [initialPrice, setInitialPrice] = useState<number>(0);
   function calculateTotalPrice(discountPercentage: number = 0, ): number {
       if( discountPercentage !== 0) {
@@ -41,19 +44,20 @@ export function ReservationDetailsForm({
         return calculateDuration() * initialPrice;
   };
 
-  const handleBookingSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleBookingSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoadingState(true);
     event.preventDefault();
     const price = calculateTotalPrice();
-    // Here you would typically handle the booking submission logic
-    // For example, sending the reservation details to your backend API
-    // This is just a placeholder for demonstration purposes
-    console.log("Booking submitted with details:", {
-      selectedRoom,
-      checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
-      checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
-      totalPrice: price,
-      guest: guestInformation,
-    });
+    const data = await addGuest(guestInformation);
+    console.log("Guest created:",data);
+   setLoadingState(false);
+    // console.log("Booking submitted with details:", {
+    //   selectedRoom,
+    //   checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
+    //   checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
+    //   totalPrice: price,
+    //   guest: guestInformation,
+    // });
     return ;
 
     // create new guestt information : 
@@ -197,7 +201,7 @@ export function ReservationDetailsForm({
         </div>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Processing..." : "Complete Reservation"}
+          {loadingState ? "Processing..." : "Complete Reservation"}
         </Button>
       </form>
     </div>
