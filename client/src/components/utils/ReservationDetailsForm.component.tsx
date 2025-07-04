@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Bed } from "lucide-react"
 import { useState } from "react";
 import { useAddGuest } from "@/hooks/useAddGuest";
+import { useAddReservation } from "@/hooks/useAddReservation";
+import { useUpdateStatus } from "@/hooks/useSetRoomStatus";
 interface ReservationDetailsFormProps {
   roomType: String[];
   selectedRoom: string;
@@ -36,7 +38,10 @@ export function ReservationDetailsForm({
     address: "",
   });
   const { addGuest } = useAddGuest();
+  const { addReservation } = useAddReservation();
+  const { updateRoomStatus } = useUpdateStatus();
   const [initialPrice, setInitialPrice] = useState<number>(0);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
   function calculateTotalPrice(discountPercentage: number = 0, ): number {
       if( discountPercentage !== 0) {
@@ -55,37 +60,50 @@ export function ReservationDetailsForm({
       console.error("Error creating guest:", error);
       return;
     }
-    console.log("Guest created:",data);
-    setLoadingState(false);
-    console.log("Booking submitted with details:", {
+    const reservationPayload = {
       room_id: selectedRoomId,
-      check_in: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
+      check_in: checkIn ? format(checkIn, "yyyy-MM-dd") : "" ,
       check_out: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
       final_price: price,
       guest_id: data.id,
-      hotel_id: "111b-4f69-962f-0ede0d836f71", // Replace with actual hotel ID
+      hotel_id: "47ac674b-e604-4e4f-b2e6-04ec0a135d57", // Replace with actual hotel ID
       discount_code: "", 
-    });
+    };
+    const reservationResponse = await addReservation(reservationPayload)
+    if(reservationResponse.error) {
+      console.error("Error creating reservation:", reservationResponse.error);
+      return;
+    }
+    setLoadingState(false);
+
+    // check reservationResponse and handle it accordingly
+    if(reservationResponse.status === 201){
+      // time to empty the form :
+      // time to made the selected room to be booked status : 
+      const id = selectedRoomId;
+      // call a hoojksto make the updates : 
+      const res = await updateRoomStatus(id, "Booked");
+      if(res.error) {
+        console.error("Error updating room status:", res.error);
+        return;
+      }
+      setIsSubmitted(true);
+      setGuestInformation({
+        name: "", 
+        email: "",
+        phone: "",
+        address: "",
+      });
+      setSelectedRoomId("");
+      setInitialPrice(0);
+      // reset the check in and check out dates :
+      checkIn = null;
+      checkOut = null;
+      // goback :
+      ()=> goBack({} as React.MouseEvent);
+    }
     return ;
-
-    // create new guestt information : 
-
-    // create new reservation :
-    // const reservationPayload = { 
-    //   room_id: selectedRoom, // Replace with actual room ID
-    //   guest_id: "guest-id-placeholder", // Replace with actual guest ID
-    //   hotel_id: "111b-4f69-962f-0ede0d836f71", // Replace with actual hotel ID
-    //   check_in: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
-    //   check_out: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
-    //   discount_code: null, // Replace with actual discount code if applicable
-    //   final_price: price,
-    // }
-
-
   }
-
-
-
 
 
   return (
@@ -213,6 +231,29 @@ export function ReservationDetailsForm({
           {loadingState ? "Processing..." : "Complete Reservation"}
         </Button>
       </form>
+      {isSubmitted && (
+            <div className="mt-4 p-4 border rounded-lg bg-green-50 border-green-200">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-medium text-green-800">Booking Confirmed!</h3>
+                    <p className="text-sm text-green-600 mt-1">
+                    Your reservation is confirmed! We look forward to welcoming you. A confirmation email has been sent to your inbox.
+                    </p>
+                </div>
+              </div>
+              <button
+                onClick={goBack}
+                className="mt-3 px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200"
+              >
+                Book Another Room
+              </button>
+            </div>
+          )}
     </div>
   );
 }
