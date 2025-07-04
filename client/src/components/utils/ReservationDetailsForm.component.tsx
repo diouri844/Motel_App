@@ -37,6 +37,7 @@ export function ReservationDetailsForm({
   });
   const { addGuest } = useAddGuest();
   const [initialPrice, setInitialPrice] = useState<number>(0);
+  const [selectedRoomId, setSelectedRoomId] = useState<string>("");
   function calculateTotalPrice(discountPercentage: number = 0, ): number {
       if( discountPercentage !== 0) {
         return calculateDuration() * initialPrice * (1 - discountPercentage / 100);
@@ -48,16 +49,23 @@ export function ReservationDetailsForm({
     setLoadingState(true);
     event.preventDefault();
     const price = calculateTotalPrice();
-    const data = await addGuest(guestInformation);
+    const {data, error } = await addGuest(guestInformation);
+    if(error) {
+      setLoadingState(false);
+      console.error("Error creating guest:", error);
+      return;
+    }
     console.log("Guest created:",data);
-   setLoadingState(false);
-    // console.log("Booking submitted with details:", {
-    //   selectedRoom,
-    //   checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
-    //   checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
-    //   totalPrice: price,
-    //   guest: guestInformation,
-    // });
+    setLoadingState(false);
+    console.log("Booking submitted with details:", {
+      room_id: selectedRoomId,
+      check_in: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
+      check_out: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
+      final_price: price,
+      guest_id: data.id,
+      hotel_id: "111b-4f69-962f-0ede0d836f71", // Replace with actual hotel ID
+      discount_code: "", 
+    });
     return ;
 
     // create new guestt information : 
@@ -116,6 +124,7 @@ export function ReservationDetailsForm({
               // time to find the price : 
               const price = availableRooms.find(room => room.id === value)?.price.toFixed(2) || 0;
               setInitialPrice(price);
+              setSelectedRoomId(value);
             }}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a room" />
