@@ -18,3 +18,4 @@ class GuestFacade implements BaseFacade {
 }
 
 export default GuestFacade;
+
