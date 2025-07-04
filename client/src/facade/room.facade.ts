@@ -13,6 +13,16 @@ class RoomFacade implements BaseFacade {
         return await this.client.from("rooms").select("*");
     }
 
+
+    // update room status from available to reserved :
+    async updateRoomStatus(roomId: string, status: string): Promise<any> {
+        return await this.client.from("rooms")
+            .update({ status: status })
+            .eq("id", roomId)
+            .select("*")
+            .single();
+    };
+
     // get a single roomm details by id 
     async getRoomById(roomId: string): Promise<any> {
         return await this.client.from("rooms").select("*").eq("id", roomId).single();
